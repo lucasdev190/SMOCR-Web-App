@@ -29,4 +29,4 @@ Projeto desenvolvido como requisito prático para a disciplina de **Projeto Inte
 
 1. Clone o repositório:
    ```bash
-   git clone [https://github.com/lucasbarros/SMOCR-Web-App.git](https://github.com/lucasbarros/SMOCR-Web-App.git)
+   git clone [https://github.com/lucasdev190/SMOCR-Web-App.git](https://github.com/lucasdev190/SMOCR-Web-App.git)
