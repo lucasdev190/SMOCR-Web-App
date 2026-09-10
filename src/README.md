@@ -64,17 +64,3 @@ npm run dev
 Estudante de Tecnologia da Informação - UFMS Digital
 
 Local de Aplicação: Parelhas - RN
-
-```
-
----
-
-### Como atualizar no GitHub rapidinho:
-1. Abra o seu repositório [`https://github.com/lucasdev190/SMOCR-Web-App`](https://github.com/lucasdev190/SMOCR-Web-App).
-2. Clique no arquivo **`README.md`**.
-3. Clique no ícone do **lápis (Edit this file)** no canto superior direito do arquivo.
-4. Cole o texto acima corrigido e clique no botão verde **Commit changes**.
-
-Pronto! Agora o comando `git clone` do seu repositório aponta exatamente para a sua conta `lucasdev190`!
-
-```
