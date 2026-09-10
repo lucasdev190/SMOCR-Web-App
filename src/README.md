@@ -1,6 +1,6 @@
 # 🚚 SMOCR - Sistema de Monitoramento e Otimização da Coleta de Resíduos
 
-Plataforma web responsiva voltada à transformação digital da zeladoria urbana e monitoramento em tempo real da coleta de lixo na **Rua Comendador José Gomes**, no município de **Parelhas - RN**. 
+Plataforma web responsiva voltada à transformação digital da zeladoria urbana e monitoramento em tempo real da coleta de lixo na **Rua**, no município de **Parelhas - RN**. 
 
 Projeto desenvolvido como requisito prático para a disciplina de **Projeto Integrador de Tecnologia da Informação II** do curso de Tecnologia da Informação (UFMS Digital).
 
