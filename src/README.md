@@ -1,8 +1,3 @@
-Ficou perfeito você ter percebido esse detalhe! No arquivo `README.md` que está no seu GitHub, onde estava o link genérico (`lucasbarros`), você deve colocar o **seu link oficial com o seu usuário (`lucasdev190`)**.
-
-Para ajustar isso, substitua todo o texto do seu arquivo **`README.md`** no GitHub por esta versão atualizada:
-
-```markdown
 # 🚚 SMOCR - Sistema de Monitoramento e Otimização da Coleta de Resíduos
 
 Plataforma web responsiva voltada à transformação digital da zeladoria urbana e monitoramento em tempo real da coleta de lixo na **Rua Comendador José Gomes**, no município de **Parelhas - RN**. 
