@@ -20,16 +20,110 @@ export default function App() {
   const [nomeUsuario, setNomeUsuario] = useState('Lucas Macedo');
   const [editandoNome, setEditandoNome] = useState(false);
   const [tempNome, setTempNome] = useState(nomeUsuario);
-  const [nivelLixeira, setNivelLixeira] = useState(50); // Porcentagem do lixo residencial
+  const [nivelLixeira, setNivelLixeira] = useState(65); // Porcentagem inicial escolhida pelo usuário
 
   // Estados da Coleta e Interface
   const [notificacaoAtiva, setNotificacaoAtiva] = useState(true);
   const [modalDenunciaAberto, setModalDenunciaAberto] = useState(false);
   const [modalAgendaAberto, setModalAgendaAberto] = useState(false);
   const [distanciaCaminhao, setDistanciaCaminhao] = useState(80);
-  const [tempoEstimado, setTempoEstimado] = useState(12);
+  const [tempoEstimado, setTempoEstimado] = useState(14);
   const [tipoDenuncia, setTipoDenuncia] = useState('acumulo');
   const [denunciaEnviada, setDenunciaEnviada] = useState(false);
+
+  // Estado para cálculo dinâmico da próxima coleta
+  const [infoProximaColeta, setInfoProximaColeta] = useState({
+    textoExtenso: '',
+    tempoRestanteTexto: '',
+    hojeEhaDia: false
+  });
+
+  // Função para calcular próxima Terça (2) ou Sexta (5) às 07:00
+  const calcularProximaColeta = () => {
+    const agora = new Date();
+    const diaSemana = agora.getDay(); // 0: Dom, 1: Seg, 2: Ter, 3: Qua, 4: Qui, 5: Sex, 6: Sáb
+    
+    // Lista dos próximos dias de coleta (Terça = 2, Sexta = 5)
+    let diasAteProxima = 0;
+    let proximoDiaNome = '';
+
+    // Se for Terça-feira (2)
+    if (diaSemana === 2) {
+      if (agora.getHours() < 12) {
+        // Coleta acontecendo/aconteceu hoje de manhã
+        return {
+          textoExtenso: 'Hoje (Terça-feira) às 07:00',
+          tempoRestanteTexto: 'Coleta em andamento / concluída hoje',
+          hojeEhaDia: true
+        };
+      } else {
+        diasAteProxima = 3; // Próxima é Sexta (3 dias depois)
+        proximoDiaNome = 'Sexta-feira';
+      }
+    } 
+    // Se for Sexta-feira (5)
+    else if (diaSemana === 5) {
+      if (agora.getHours() < 12) {
+        return {
+          textoExtenso: 'Hoje (Sexta-feira) às 07:00',
+          tempoRestanteTexto: 'Coleta em andamento / concluída hoje',
+          hojeEhaDia: true
+        };
+      } else {
+        diasAteProxima = 4; // Próxima é Terça (4 dias depois)
+        proximoDiaNome = 'Terça-feira';
+      }
+    } 
+    // Outros dias da semana
+    else {
+      if (diaSemana < 2) { // Domingo ou Segunda
+        diasAteProxima = 2 - diaSemana;
+        proximoDiaNome = 'Terça-feira';
+      } else if (diaSemana < 5) { // Quarta ou Quinta
+        diasAteProxima = 5 - diaSemana;
+        proximoDiaNome = 'Sexta-feira';
+      } else { // Sábado (6)
+        diasAteProxima = 3; // Terça-feira
+        proximoDiaNome = 'Terça-feira';
+      }
+    }
+
+    // Calcular data futura exata das 07:00
+    const proximaData = new Date(agora);
+    proximaData.setDate(agora.getDate() + diasAteProxima);
+    proximaData.setHours(7, 0, 0, 0);
+
+    const diffMs = proximaData - agora;
+    const diffHorasTotal = Math.floor(diffMs / (1000 * 60 * 60));
+    const diffDias = Math.floor(diffHorasTotal / 24);
+    const diffHoras = diffHorasTotal % 24;
+    const diffMinutos = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
+
+    let formatoTempo = '';
+    if (diffDias > 0) {
+      formatoTempo = `Faltam ${diffDias} dia(s), ${diffHoras}h e ${diffMinutos}min`;
+    } else {
+      formatoTempo = `Faltam ${diffHoras}h e ${diffMinutos}min`;
+    }
+
+    const dataFormatada = proximaData.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' });
+
+    return {
+      textoExtenso: `${proximoDiaNome} (${dataFormatada}) às 07:00`,
+      tempoRestanteTexto: formatoTempo,
+      hojeEhaDia: false
+    };
+  };
+
+  // Atualizar o cronômetro em tempo real a cada minuto
+  useEffect(() => {
+    setInfoProximaColeta(calcularProximaColeta());
+    const interval = setInterval(() => {
+      setInfoProximaColeta(calcularProximaColeta());
+    }, 60000);
+
+    return () => clearInterval(interval);
+  }, []);
 
   // Simulação de deslocamento em tempo real do veículo de coleta
   useEffect(() => {
@@ -136,11 +230,11 @@ export default function App() {
             </div>
           </div>
 
-          {/* BARRA DE PROGRESSO DO VEÍCULO */}
+          {/* BARRA DE PROGRESSO DO VEÍCULO E NÍVEL DA SUA LIXEIRA */}
           <div className="space-y-2">
             <div className="flex justify-between text-xs font-medium text-gray-500">
               <span>Início da Rota (Centro)</span>
-              <span>Sua Lixeira ({distanciaCaminhao}%)</span>
+              <span className="font-bold text-emerald-700">Sua Lixeira ({nivelLixeira}%)</span>
             </div>
             <div className="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
               <div 
@@ -151,13 +245,33 @@ export default function App() {
           </div>
         </section>
 
-        {/* NOVO PAINEL: NÍVEL DA LIXEIRA DA RESIDÊNCIA */}
+        {/* CARD DE CÁLCULO REAL DA PRÓXIMA COLETA */}
+        <section className="bg-emerald-900 text-white p-5 rounded-2xl shadow-sm border border-emerald-800">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-3">
+              <div className="p-2.5 bg-emerald-800 rounded-xl">
+                <Calendar className="h-6 w-6 text-emerald-300" />
+              </div>
+              <div>
+                <h4 className="text-xs text-emerald-200 font-semibold uppercase tracking-wider">Próxima Coleta Programada</h4>
+                <p className="text-base font-bold text-white mt-0.5">{infoProximaColeta.textoExtenso}</p>
+              </div>
+            </div>
+            <div className="text-right">
+              <span className="text-xs bg-emerald-800 text-emerald-100 px-3 py-1.5 rounded-lg font-bold">
+                {infoProximaColeta.tempoRestanteTexto}
+              </span>
+            </div>
+          </div>
+        </section>
+
+        {/* NOVO PAINEL: CONTROLADOR DA LIXEIRA DA SUA CASA */}
         <section className="bg-white p-5 rounded-2xl shadow-sm border border-gray-200">
           <div className="flex items-center justify-between mb-3">
             <h3 className="font-bold text-gray-800 flex items-center gap-2">
-              <Trash2 className="h-5 w-5 text-emerald-600" /> Volume da Lixeira da Sua Casa
+              <Trash2 className="h-5 w-5 text-emerald-600" /> Nível da Lixeira da Sua Casa
             </h3>
-            <span className={`text-xs font-bold px-2 py-1 rounded-lg ${
+            <span className={`text-xs font-bold px-3 py-1 rounded-lg ${
               nivelLixeira > 80 ? 'bg-red-100 text-red-700' : 'bg-emerald-100 text-emerald-800'
             }`}>
               {nivelLixeira}% Cheia
@@ -165,23 +279,23 @@ export default function App() {
           </div>
           
           <p className="text-xs text-gray-500 mb-4">
-            Ajuste o volume estimado para que a equipe de coleta saiba a demanda do seu trecho.
+            Mova a barra abaixo para selecionar a porcentagem de lixo da sua casa. Esse valor atualiza automaticamente o painel do trecho.
           </p>
 
           <input 
             type="range" 
             min="0" 
             max="100" 
-            step="10"
+            step="5"
             value={nivelLixeira} 
             onChange={(e) => setNivelLixeira(Number(e.target.value))}
-            className="w-full accent-emerald-600 h-2 bg-gray-200 rounded-lg cursor-pointer"
+            className="w-full accent-emerald-600 h-2.5 bg-gray-200 rounded-lg cursor-pointer"
           />
 
           <div className="flex justify-between text-xs text-gray-400 mt-2 font-medium">
             <span>Vazia (0%)</span>
             <span>Metade (50%)</span>
-            <span>Lotada (100%)</span>
+            <span>Cheia (100%)</span>
           </div>
         </section>
 
@@ -204,7 +318,7 @@ export default function App() {
                 />
               </label>
               <p className="text-xs text-gray-500 px-1">
-                Aviso sonoro disparado 15 minutos antes da passagem nas **Terças e Sextas**.
+                Você receberá um aviso sonoro 15 minutos antes da passagem nas **Terças e Sextas-feiras**.
               </p>
             </div>
           </section>
