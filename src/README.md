@@ -47,16 +47,17 @@ Possuir o **[Node.js](https://nodejs.org/)** instalado no computador.
 
 ### Passo a Passo:
 
-1. **Clone o repositório:**
+1. **Baixe o projeto:**
 ```bash
-git clone [https://github.com/lucasdev190/SMOCR-Web-App.git](https://github.com/lucasdev190/SMOCR-Web-App.git)
+- [Clique aqui para baixar o ZIP do repositório](https://github.com/lucasdev190/SMOCR-Web-App/archive/refs/heads/main.zip) e extraia o arquivo no seu computador.
 
 ```
 
 
-2. **Acesse a pasta raiz do projeto:**
+2. **Acesse a pasta do projeto pelo Gerenciador de Arquivos::**
 ```bash
-cd SMOCR-Web-App
+- Abra a pasta onde o projeto foi extraído (exemplo: `C:\Users\l\Downloads\SMOCR-Web-App-main\SMOCR-Web-App-main`).
+   - Clique no espaço em branco da **barra de endereço** no topo da janela do Windows, digite `cmd` e aperte **Enter** (o terminal abrirá apontando direto para a pasta do projeto).
 
 ```
 
