@@ -39,6 +39,14 @@ SMOCR-Web-App/
 
 ---
 
+## 🌐 Acesso Rápido (Sem Instalação)
+
+Se preferir não rodar o projeto localmente no seu computador, a aplicação está hospedada e disponível 24/7. 
+
+👉 **[Clique aqui para abrir a aplicação online no Vercel](https://smocr-web-app.vercel.app/)**
+
+---
+
 ## 🔧 Como Executar o Projeto Localmente
 
 ### Pré-requisito:
