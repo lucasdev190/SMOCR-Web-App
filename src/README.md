@@ -43,7 +43,7 @@ SMOCR-Web-App/
 
 Se preferir não rodar o projeto localmente no seu computador, a aplicação está hospedada e disponível 24/7. 
 
-👉 **[Clique aqui para abrir a aplicação online no Vercel](https://smocr-web-app.vercel.app/)**
+👉 **[Clique aqui para abrir a aplicação online](https://smocr-web-app.vercel.app/)**
 
 ---
 
