@@ -56,11 +56,10 @@ https://github.com/lucasdev190/SMOCR-Web-App/archive/refs/heads/main.zip
 
 
 2. **Acesse a pasta do projeto pelo Gerenciador de Arquivos::**
-```bash
-- Abra a pasta onde o projeto foi extraído (exemplo: `C:\Users\0\Downloads\SMOCR-Web-App-main\SMOCR-Web-App-main`).
-   - Clique no espaço em branco da **barra de endereço** no topo da janela do Windows, digite `cmd` e aperte **Enter** (o terminal abrirá apontando direto para a pasta do projeto).
 
-```
+- Abra a pasta onde o projeto foi extraído (exemplo: `C:\Users\0\Downloads\SMOCR-Web-App-main\SMOCR-Web-App-main`).
+- Clique no espaço em branco da **barra de endereço** no topo da janela do Windows, digite `cmd` e aperte **Enter** (o terminal abrirá apontando direto para a pasta do projeto).
+
 
 
 3. **Instale as dependências necessárias:**
