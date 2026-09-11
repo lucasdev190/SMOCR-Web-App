@@ -10,7 +10,7 @@ Projeto desenvolvido como requisito prático para a disciplina de **Projeto Inte
 
 Acesse a demonstração online e responsiva diretamente no seu navegador ou celular:
 
-👉 **[https://smocr-web-app.vercel.app/](https://smocr-web-app.vercel.app/)**
+👉 **[Clique aqui para abrir a aplicação online](https://smocr-web-app.vercel.app/)**
 
 ---
 
