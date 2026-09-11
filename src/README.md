@@ -6,6 +6,14 @@ Projeto desenvolvido como requisito prático para a disciplina de **Projeto Inte
 
 ---
 
+## 🌐 Acesso Rápido (Sem Instalação)
+
+Acesse a demonstração online e responsiva diretamente no seu navegador ou celular:
+
+👉 **[https://smocr-web-app.vercel.app/](https://smocr-web-app.vercel.app/)**
+
+---
+
 ## 🛠️ Tecnologias Utilizadas
 
 - **React.js (v18+)**: Biblioteca para construção de interfaces orientadas a componentes.
@@ -17,8 +25,9 @@ Projeto desenvolvido como requisito prático para a disciplina de **Projeto Inte
 
 ## 🚀 Funcionalidades Principais
 
-- **Status da Coleta em Tempo Real**: Indicador visual dinâmico com barra de progresso do deslocamento do caminhão coletor.
-- **Alertas de Proximidade**: Notificações sonoras configuráveis antes da chegada do veículo no trecho.
+- **Status da Coleta em Tempo Real**: Indicador visual dinâmico com barra de progresso ajustável de acordo com o nível da lixeira.
+- **Contagem Regressiva Viva**: Cronômetro de precisão que calcula dias, horas, minutos e segundos restantes para a próxima coleta (**Terças e Sextas às 07:00**).
+- **Personalização Dinâmica**: Edição direta do nome do morador (padrão: João) e nome da rua (padrão: Centro).
 - **Ouvidoria Visual Comunitária**: Módulo em popup para registro de denúncias ambientais com suporte a upload de fotos e marcação GPS.
 - **Design Responsivo**: Layout otimizado para celulares, tablets e desktops.
 
@@ -36,14 +45,6 @@ SMOCR-Web-App/
     └── main.jsx      # Ponto de entrada e renderização do React DOM
 
 ```
-
----
-
-## 🌐 Acesso Rápido (Sem Instalação)
-
-Se preferir não rodar o projeto localmente no seu computador, a aplicação está hospedada e disponível 24/7. 
-
-👉 **[Clique aqui para abrir a aplicação online](https://smocr-web-app.vercel.app/)**
 
 ---
 
