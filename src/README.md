@@ -48,7 +48,6 @@ Possuir o **[Node.js](https://nodejs.org/)** instalado no computador.
 ### Passo a Passo:
 
 1. **Baixe o projeto:**
-Extraia o arquivo no seu computador.
 - [📥 Clique aqui para baixar o projeto (.ZIP)](https://github.com/lucasdev190/SMOCR-Web-App/archive/refs/heads/main.zip) e extraia o arquivo no seu computador.
 
 
