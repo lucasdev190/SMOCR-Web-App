@@ -49,10 +49,7 @@ Possuir o **[Node.js](https://nodejs.org/)** instalado no computador.
 
 1. **Baixe o projeto:**
 Extraia o arquivo no seu computador.
-```bash
-https://github.com/lucasdev190/SMOCR-Web-App/archive/refs/heads/main.zip
-
-```
+- [📥 Clique aqui para baixar o projeto (.ZIP)](https://github.com/lucasdev190/SMOCR-Web-App/archive/refs/heads/main.zip) e extraia o arquivo no seu computador.
 
 
 2. **Acesse a pasta do projeto pelo Gerenciador de Arquivos::**
