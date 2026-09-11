@@ -41,72 +41,73 @@ export default function App() {
     tempoRestanteTexto: ''
   });
 
-  // Cálculo preciso da próxima Terça (2) ou Sexta (5) às 07:00
+  // Cálculo de precisão em tempo real da próxima Terça (2) ou Sexta (5) às 07:00
   const calcularProximaColeta = () => {
     const agora = new Date();
     const diaSemana = agora.getDay(); // 0: Dom, 1: Seg, 2: Ter, 3: Qua, 4: Qui, 5: Sex, 6: Sáb
-    const hora = agora.getHours();
-
-    let proximaData = new Date(agora);
+    
+    let target = new Date(agora);
     let nomeDiaTarget = '';
 
-    // Se for Terça-feira antes das 07:00 da manhã
-    if (diaSemana === 2 && hora < 7) {
-      proximaData.setHours(7, 0, 0, 0);
-      nomeDiaTarget = 'Hoje (Terça-feira)';
-    } 
-    // Se for Sexta-feira antes das 07:00 da manhã
-    else if (diaSemana === 5 && hora < 7) {
-      proximaData.setHours(7, 0, 0, 0);
-      nomeDiaTarget = 'Hoje (Sexta-feira)';
-    } 
-    // Caso contrário, calcula o próximo dia (Terça ou Sexta)
-    else {
-      let diasAteProximo = 0;
-
+    // Se hoje for Terça (2) ou Sexta (5) antes das 07:00 da manhã
+    if ((diaSemana === 2 || diaSemana === 5) && agora.getHours() < 7) {
+      target.setHours(7, 0, 0, 0);
+      nomeDiaTarget = diaSemana === 2 ? 'Hoje (Terça-feira)' : 'Hoje (Sexta-feira)';
+    } else {
+      // Calcular dias até a próxima Terça (2) ou Sexta (5)
+      let diasAteTarget = 0;
       if (diaSemana === 2) { // Terça após 07h -> Próxima é Sexta (3 dias)
-        diasAteProximo = 3;
+        diasAteTarget = 3;
         nomeDiaTarget = 'Sexta-feira';
       } else if (diaSemana === 5) { // Sexta após 07h -> Próxima é Terça (4 dias)
-        diasAteProximo = 4;
+        diasAteTarget = 4;
         nomeDiaTarget = 'Terça-feira';
-      } else if (diaSemana === 0) { // Domingo -> Terça (2 dias)
-        diasAteProximo = 2;
+      } else if (diaSemana === 0) { // Dom -> Ter (2 dias)
+        diasAteTarget = 2;
         nomeDiaTarget = 'Terça-feira';
-      } else if (diaSemana === 1) { // Segunda -> Terça (1 dia)
-        diasAteProximo = 1;
+      } else if (diaSemana === 1) { // Seg -> Ter (1 dia)
+        diasAteTarget = 1;
         nomeDiaTarget = 'Terça-feira';
-      } else if (diaSemana === 3) { // Quarta -> Sexta (2 dias)
-        diasAteProximo = 2;
+      } else if (diaSemana === 3) { // Qua -> Sex (2 dias)
+        diasAteTarget = 2;
         nomeDiaTarget = 'Sexta-feira';
-      } else if (diaSemana === 4) { // Quinta -> Sexta (1 dia)
-        diasAteProximo = 1;
+      } else if (diaSemana === 4) { // Qui -> Sex (1 dia)
+        diasAteTarget = 1;
         nomeDiaTarget = 'Sexta-feira';
-      } else if (diaSemana === 6) { // Sábado -> Terça (3 dias)
-        diasAteProximo = 3;
+      } else if (diaSemana === 6) { // Sáb -> Ter (3 dias)
+        diasAteTarget = 3;
         nomeDiaTarget = 'Terça-feira';
       }
 
-      proximaData.setDate(agora.getDate() + diasAteProximo);
-      proximaData.setHours(7, 0, 0, 0);
+      target.setDate(agora.getDate() + diasAteTarget);
+      target.setHours(7, 0, 0, 0);
     }
 
-    // Diferença em milissegundos convertida para Dias, Horas e Minutos
-    const diffMs = proximaData.getTime() - agora.getTime();
-    const diffMinutosTotal = Math.floor(diffMs / (1000 * 60));
-    const diffHorasTotal = Math.floor(diffMinutosTotal / 60);
-    const dias = Math.floor(diffHorasTotal / 24);
-    const horas = diffHorasTotal % 24;
-    const minutos = diffMinutosTotal % 60;
+    // Diferença exata em milissegundos
+    const diffMs = target.getTime() - agora.getTime();
+
+    if (diffMs <= 0) {
+      return {
+        textoExtenso: `${nomeDiaTarget} às 07:00`,
+        tempoRestanteTexto: 'Coleta em andamento!'
+      };
+    }
+
+    const diffSegundosTotal = Math.floor(diffMs / 1000);
+    const dias = Math.floor(diffSegundosTotal / (3600 * 24));
+    const horas = Math.floor((diffSegundosTotal % (3600 * 24)) / 3600);
+    const minutos = Math.floor((diffSegundosTotal % 3600) / 60);
+    const segundos = diffSegundosTotal % 60;
+
+    const pad = (n) => String(n).padStart(2, '0');
+    const dataFormatada = target.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' });
 
     let textoTempo = '';
     if (dias > 0) {
-      textoTempo = `Faltam ${dias}d, ${horas}h e ${minutos}min`;
+      textoTempo = `Faltam ${dias}d ${pad(horas)}h ${pad(minutos)}m ${pad(segundos)}s`;
     } else {
-      textoTempo = `Faltam ${horas}h e ${minutos}min`;
+      textoTempo = `Faltam ${pad(horas)}h ${pad(minutos)}m ${pad(segundos)}s`;
     }
-
-    const dataFormatada = proximaData.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' });
 
     return {
       textoExtenso: `${nomeDiaTarget} (${dataFormatada}) às 07:00`,
@@ -114,14 +115,14 @@ export default function App() {
     };
   };
 
-  // Atualizar a contagem a cada minuto
+  // Timer atualizando a cada 1 SEGUNDO (Contagem regressiva viva)
   useEffect(() => {
     setInfoProximaColeta(calcularProximaColeta());
-    const interval = setInterval(() => {
+    const timer = setInterval(() => {
       setInfoProximaColeta(calcularProximaColeta());
-    }, 60000);
+    }, 1000);
 
-    return () => clearInterval(interval);
+    return () => clearInterval(timer);
   }, []);
 
   const handleSalvarNome = (e) => {
@@ -259,7 +260,7 @@ export default function App() {
           </div>
         </section>
 
-        {/* CARD DE CONTAGEM REGRESSIVA REAL */}
+        {/* CARD DE CONTAGEM REGRESSIVA REAL EM TEMPO REAL */}
         <section className="bg-emerald-900 text-white p-5 rounded-2xl shadow-sm border border-emerald-800">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
             <div className="flex items-center space-x-3">
@@ -272,7 +273,7 @@ export default function App() {
               </div>
             </div>
             <div>
-              <span className="text-xs bg-emerald-800 text-emerald-100 px-3 py-1.5 rounded-lg font-bold block sm:inline-block">
+              <span className="text-xs bg-emerald-800 text-emerald-100 px-3 py-1.5 rounded-lg font-mono font-bold block sm:inline-block">
                 {infoProximaColeta.tempoRestanteTexto}
               </span>
             </div>
