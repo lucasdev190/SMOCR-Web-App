@@ -16,106 +16,105 @@ import {
 } from 'lucide-react';
 
 export default function App() {
-  // Estados do Usuário e da Residência
-  const [nomeUsuario, setNomeUsuario] = useState('Lucas Macedo');
+  // Estados de Personalização (Padrões: João e Centro)
+  const [nomeUsuario, setNomeUsuario] = useState('João');
   const [editandoNome, setEditandoNome] = useState(false);
   const [tempNome, setTempNome] = useState(nomeUsuario);
-  const [nivelLixeira, setNivelLixeira] = useState(65); // Porcentagem inicial escolhida pelo usuário
 
-  // Estados da Coleta e Interface
+  const [nomeRua, setNomeRua] = useState('Centro');
+  const [editandoRua, setEditandoRua] = useState(false);
+  const [tempRua, setTempRua] = useState(nomeRua);
+
+  // Estado do Nível da Lixeira (Porcentagem escolhida pelo usuário)
+  const [nivelLixeira, setNivelLixeira] = useState(65);
+
+  // Estados dos Modais e Formulários
   const [notificacaoAtiva, setNotificacaoAtiva] = useState(true);
   const [modalDenunciaAberto, setModalDenunciaAberto] = useState(false);
   const [modalAgendaAberto, setModalAgendaAberto] = useState(false);
-  const [distanciaCaminhao, setDistanciaCaminhao] = useState(80);
-  const [tempoEstimado, setTempoEstimado] = useState(14);
   const [tipoDenuncia, setTipoDenuncia] = useState('acumulo');
   const [denunciaEnviada, setDenunciaEnviada] = useState(false);
 
-  // Estado para cálculo dinâmico da próxima coleta
+  // Estado da Contagem Regressiva para a Próxima Coleta
   const [infoProximaColeta, setInfoProximaColeta] = useState({
     textoExtenso: '',
-    tempoRestanteTexto: '',
-    hojeEhaDia: false
+    tempoRestanteTexto: ''
   });
 
-  // Função para calcular próxima Terça (2) ou Sexta (5) às 07:00
+  // Cálculo preciso da próxima Terça (2) ou Sexta (5) às 07:00
   const calcularProximaColeta = () => {
     const agora = new Date();
     const diaSemana = agora.getDay(); // 0: Dom, 1: Seg, 2: Ter, 3: Qua, 4: Qui, 5: Sex, 6: Sáb
-    
-    // Lista dos próximos dias de coleta (Terça = 2, Sexta = 5)
-    let diasAteProxima = 0;
-    let proximoDiaNome = '';
+    const hora = agora.getHours();
 
-    // Se for Terça-feira (2)
-    if (diaSemana === 2) {
-      if (agora.getHours() < 12) {
-        // Coleta acontecendo/aconteceu hoje de manhã
-        return {
-          textoExtenso: 'Hoje (Terça-feira) às 07:00',
-          tempoRestanteTexto: 'Coleta em andamento / concluída hoje',
-          hojeEhaDia: true
-        };
-      } else {
-        diasAteProxima = 3; // Próxima é Sexta (3 dias depois)
-        proximoDiaNome = 'Sexta-feira';
-      }
+    let proximaData = new Date(agora);
+    let nomeDiaTarget = '';
+
+    // Se for Terça-feira antes das 07:00 da manhã
+    if (diaSemana === 2 && hora < 7) {
+      proximaData.setHours(7, 0, 0, 0);
+      nomeDiaTarget = 'Hoje (Terça-feira)';
     } 
-    // Se for Sexta-feira (5)
-    else if (diaSemana === 5) {
-      if (agora.getHours() < 12) {
-        return {
-          textoExtenso: 'Hoje (Sexta-feira) às 07:00',
-          tempoRestanteTexto: 'Coleta em andamento / concluída hoje',
-          hojeEhaDia: true
-        };
-      } else {
-        diasAteProxima = 4; // Próxima é Terça (4 dias depois)
-        proximoDiaNome = 'Terça-feira';
-      }
+    // Se for Sexta-feira antes das 07:00 da manhã
+    else if (diaSemana === 5 && hora < 7) {
+      proximaData.setHours(7, 0, 0, 0);
+      nomeDiaTarget = 'Hoje (Sexta-feira)';
     } 
-    // Outros dias da semana
+    // Caso contrário, calcula o próximo dia (Terça ou Sexta)
     else {
-      if (diaSemana < 2) { // Domingo ou Segunda
-        diasAteProxima = 2 - diaSemana;
-        proximoDiaNome = 'Terça-feira';
-      } else if (diaSemana < 5) { // Quarta ou Quinta
-        diasAteProxima = 5 - diaSemana;
-        proximoDiaNome = 'Sexta-feira';
-      } else { // Sábado (6)
-        diasAteProxima = 3; // Terça-feira
-        proximoDiaNome = 'Terça-feira';
+      let diasAteProximo = 0;
+
+      if (diaSemana === 2) { // Terça após 07h -> Próxima é Sexta (3 dias)
+        diasAteProximo = 3;
+        nomeDiaTarget = 'Sexta-feira';
+      } else if (diaSemana === 5) { // Sexta após 07h -> Próxima é Terça (4 dias)
+        diasAteProximo = 4;
+        nomeDiaTarget = 'Terça-feira';
+      } else if (diaSemana === 0) { // Domingo -> Terça (2 dias)
+        diasAteProximo = 2;
+        nomeDiaTarget = 'Terça-feira';
+      } else if (diaSemana === 1) { // Segunda -> Terça (1 dia)
+        diasAteProximo = 1;
+        nomeDiaTarget = 'Terça-feira';
+      } else if (diaSemana === 3) { // Quarta -> Sexta (2 dias)
+        diasAteProximo = 2;
+        nomeDiaTarget = 'Sexta-feira';
+      } else if (diaSemana === 4) { // Quinta -> Sexta (1 dia)
+        diasAteProximo = 1;
+        nomeDiaTarget = 'Sexta-feira';
+      } else if (diaSemana === 6) { // Sábado -> Terça (3 dias)
+        diasAteProximo = 3;
+        nomeDiaTarget = 'Terça-feira';
       }
+
+      proximaData.setDate(agora.getDate() + diasAteProximo);
+      proximaData.setHours(7, 0, 0, 0);
     }
 
-    // Calcular data futura exata das 07:00
-    const proximaData = new Date(agora);
-    proximaData.setDate(agora.getDate() + diasAteProxima);
-    proximaData.setHours(7, 0, 0, 0);
+    // Diferença em milissegundos convertida para Dias, Horas e Minutos
+    const diffMs = proximaData.getTime() - agora.getTime();
+    const diffMinutosTotal = Math.floor(diffMs / (1000 * 60));
+    const diffHorasTotal = Math.floor(diffMinutosTotal / 60);
+    const dias = Math.floor(diffHorasTotal / 24);
+    const horas = diffHorasTotal % 24;
+    const minutos = diffMinutosTotal % 60;
 
-    const diffMs = proximaData - agora;
-    const diffHorasTotal = Math.floor(diffMs / (1000 * 60 * 60));
-    const diffDias = Math.floor(diffHorasTotal / 24);
-    const diffHoras = diffHorasTotal % 24;
-    const diffMinutos = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
-
-    let formatoTempo = '';
-    if (diffDias > 0) {
-      formatoTempo = `Faltam ${diffDias} dia(s), ${diffHoras}h e ${diffMinutos}min`;
+    let textoTempo = '';
+    if (dias > 0) {
+      textoTempo = `Faltam ${dias}d, ${horas}h e ${minutos}min`;
     } else {
-      formatoTempo = `Faltam ${diffHoras}h e ${diffMinutos}min`;
+      textoTempo = `Faltam ${horas}h e ${minutos}min`;
     }
 
     const dataFormatada = proximaData.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' });
 
     return {
-      textoExtenso: `${proximoDiaNome} (${dataFormatada}) às 07:00`,
-      tempoRestanteTexto: formatoTempo,
-      hojeEhaDia: false
+      textoExtenso: `${nomeDiaTarget} (${dataFormatada}) às 07:00`,
+      tempoRestanteTexto: textoTempo
     };
   };
 
-  // Atualizar o cronômetro em tempo real a cada minuto
+  // Atualizar a contagem a cada minuto
   useEffect(() => {
     setInfoProximaColeta(calcularProximaColeta());
     const interval = setInterval(() => {
@@ -125,22 +124,16 @@ export default function App() {
     return () => clearInterval(interval);
   }, []);
 
-  // Simulação de deslocamento em tempo real do veículo de coleta
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setDistanciaCaminhao((prev) => (prev >= 100 ? 30 : prev + 5));
-      setTempoEstimado((prev) => (prev > 2 ? prev - 1 : 15));
-    }, 4000);
-
-    return () => clearInterval(timer);
-  }, []);
-
   const handleSalvarNome = (e) => {
     e.preventDefault();
-    if (tempNome.trim() !== '') {
-      setNomeUsuario(tempNome);
-    }
+    if (tempNome.trim() !== '') setNomeUsuario(tempNome);
     setEditandoNome(false);
+  };
+
+  const handleSalvarRua = (e) => {
+    e.preventDefault();
+    if (tempRua.trim() !== '') setNomeRua(tempRua);
+    setEditandoRua(false);
   };
 
   const handleEnviarDenuncia = (e) => {
@@ -161,9 +154,30 @@ export default function App() {
             <Menu className="h-6 w-6 cursor-pointer hover:opacity-80" />
             <div>
               <h1 className="font-bold text-lg leading-tight">SMOCR</h1>
-              <p className="text-xs text-emerald-100 flex items-center gap-1">
-                <MapPin className="h-3 w-3" /> Rua Comendador José Gomes - Parelhas/RN
-              </p>
+              
+              {/* Nome da Rua Editável */}
+              {editandoRua ? (
+                <form onSubmit={handleSalvarRua} className="flex items-center gap-1 mt-0.5">
+                  <MapPin className="h-3 w-3 text-emerald-200" />
+                  <input 
+                    type="text" 
+                    value={tempRua} 
+                    onChange={(e) => setTempRua(e.target.value)} 
+                    className="px-1 py-0.2 text-xs text-gray-900 rounded border-none focus:outline-none w-32"
+                    autoFocus
+                  />
+                  <button type="submit" className="text-xs text-emerald-200 font-bold hover:text-white">✓</button>
+                </form>
+              ) : (
+                <p 
+                  onClick={() => { setTempRua(nomeRua); setEditandoRua(true); }}
+                  className="text-xs text-emerald-100 flex items-center gap-1 cursor-pointer hover:underline"
+                  title="Clique para editar a rua"
+                >
+                  <MapPin className="h-3 w-3" /> Rua {nomeRua} - Parelhas/RN
+                  <Edit3 className="h-2.5 w-2.5 text-emerald-300 ml-0.5" />
+                </p>
+              )}
             </div>
           </div>
 
@@ -176,7 +190,7 @@ export default function App() {
                   type="text" 
                   value={tempNome} 
                   onChange={(e) => setTempNome(e.target.value)} 
-                  className="px-1.5 py-0.5 text-xs text-gray-900 rounded border-none focus:outline-none w-28"
+                  className="px-1.5 py-0.5 text-xs text-gray-900 rounded border-none focus:outline-none w-24"
                   autoFocus
                 />
                 <button type="submit" className="text-emerald-200 font-bold hover:text-white">✓</button>
@@ -195,10 +209,10 @@ export default function App() {
         </div>
       </header>
 
-      {/* ─── CONTEÚDO PRINCIPAL (PAINEL DO CIDADÃO) ─── */}
+      {/* ─── CONTEÚDO PRINCIPAL ─── */}
       <main className="max-w-4xl mx-auto px-4 py-6 space-y-6">
 
-        {/* CARD PRINCIPAL: STATUS DA COLETA EM TEMPO REAL */}
+        {/* CARD PRINCIPAL: STATUS DA COLETA */}
         <section className="bg-white rounded-2xl p-6 shadow-sm border border-gray-200">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center space-x-2">
@@ -207,47 +221,47 @@ export default function App() {
                 <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
               </span>
               <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wider">
-                Status da Coleta Hoje
+                Status da Coleta
               </h2>
             </div>
             <span className="text-xs bg-emerald-100 text-emerald-800 px-2.5 py-1 rounded-md font-semibold">
-              Terças e Sextas (Dias de Coleta)
+              Terças e Sextas (07:00)
             </span>
           </div>
 
           <div className="flex flex-col md:flex-row items-center justify-between gap-4 bg-emerald-50 p-4 rounded-xl border border-emerald-100 mb-6">
             <div className="flex items-center space-x-4">
               <div className="p-3 bg-emerald-600 text-white rounded-xl">
-                <Truck className="h-8 w-8 animate-bounce" />
+                <Truck className="h-8 w-8" />
               </div>
               <div>
-                <h3 className="font-bold text-gray-900 text-lg">Caminhão de Lixo Próximo</h3>
+                <h3 className="font-bold text-gray-900 text-lg">Rota de Coleta - Rua {nomeRua}</h3>
                 <p className="text-sm text-gray-600 flex items-center gap-1 mt-0.5">
-                  <Clock className="h-4 w-4 text-emerald-600" /> Previsão no seu trecho: 
-                  <span className="font-bold text-emerald-700 ml-1">{tempoEstimado} minutos</span>
+                  <Clock className="h-4 w-4 text-emerald-600" /> Previsão de atendimento: 
+                  <span className="font-bold text-emerald-700 ml-1">Terça e Sexta às 07:00</span>
                 </p>
               </div>
             </div>
           </div>
 
-          {/* BARRA DE PROGRESSO DO VEÍCULO E NÍVEL DA SUA LIXEIRA */}
+          {/* BARRA FIXA BASEADA NA PORCENTAGEM DO LIXO */}
           <div className="space-y-2">
             <div className="flex justify-between text-xs font-medium text-gray-500">
-              <span>Início da Rota (Centro)</span>
+              <span>Início da Rota ({nomeRua})</span>
               <span className="font-bold text-emerald-700">Sua Lixeira ({nivelLixeira}%)</span>
             </div>
             <div className="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
               <div 
-                className="bg-emerald-600 h-3 rounded-full transition-all duration-500 ease-out"
-                style={{ width: `${distanciaCaminhao}%` }}
+                className="bg-emerald-600 h-3 rounded-full transition-all duration-300 ease-out"
+                style={{ width: `${nivelLixeira}%` }}
               ></div>
             </div>
           </div>
         </section>
 
-        {/* CARD DE CÁLCULO REAL DA PRÓXIMA COLETA */}
+        {/* CARD DE CONTAGEM REGRESSIVA REAL */}
         <section className="bg-emerald-900 text-white p-5 rounded-2xl shadow-sm border border-emerald-800">
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
             <div className="flex items-center space-x-3">
               <div className="p-2.5 bg-emerald-800 rounded-xl">
                 <Calendar className="h-6 w-6 text-emerald-300" />
@@ -257,15 +271,15 @@ export default function App() {
                 <p className="text-base font-bold text-white mt-0.5">{infoProximaColeta.textoExtenso}</p>
               </div>
             </div>
-            <div className="text-right">
-              <span className="text-xs bg-emerald-800 text-emerald-100 px-3 py-1.5 rounded-lg font-bold">
+            <div>
+              <span className="text-xs bg-emerald-800 text-emerald-100 px-3 py-1.5 rounded-lg font-bold block sm:inline-block">
                 {infoProximaColeta.tempoRestanteTexto}
               </span>
             </div>
           </div>
         </section>
 
-        {/* NOVO PAINEL: CONTROLADOR DA LIXEIRA DA SUA CASA */}
+        {/* CONTROLADOR DO VOLUME DA LIXEIRA DA CASA */}
         <section className="bg-white p-5 rounded-2xl shadow-sm border border-gray-200">
           <div className="flex items-center justify-between mb-3">
             <h3 className="font-bold text-gray-800 flex items-center gap-2">
@@ -279,7 +293,7 @@ export default function App() {
           </div>
           
           <p className="text-xs text-gray-500 mb-4">
-            Mova a barra abaixo para selecionar a porcentagem de lixo da sua casa. Esse valor atualiza automaticamente o painel do trecho.
+            Ajuste o volume estimado para que a barra de progresso do trecho reflita a demanda da sua lixeira.
           </p>
 
           <input 
@@ -302,7 +316,6 @@ export default function App() {
         {/* SEÇÃO DUPLA: CONFIGURAÇÕES E AÇÕES RÁPIDAS */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           
-          {/* PAINEL DE ALERTAS */}
           <section className="bg-white p-5 rounded-2xl shadow-sm border border-gray-200">
             <h3 className="font-bold text-gray-800 mb-4 flex items-center gap-2">
               <Bell className="h-5 w-5 text-emerald-600" /> Configuração de Alertas
@@ -318,12 +331,11 @@ export default function App() {
                 />
               </label>
               <p className="text-xs text-gray-500 px-1">
-                Você receberá um aviso sonoro 15 minutos antes da passagem nas **Terças e Sextas-feiras**.
+                Aviso sonoro disparado 15 minutos antes da coleta na **Rua {nomeRua}**.
               </p>
             </div>
           </section>
 
-          {/* AÇÕES RÁPIDAS */}
           <section className="bg-white p-5 rounded-2xl shadow-sm border border-gray-200">
             <h3 className="font-bold text-gray-800 mb-4">Ações Rápidas</h3>
             <div className="grid grid-cols-2 gap-3">
@@ -348,7 +360,7 @@ export default function App() {
         </div>
       </main>
 
-      {/* ─── MODAL AGENDA VERDE ─── */}
+      {/* MODAL AGENDA VERDE */}
       {modalAgendaAberto && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-2xl max-w-md w-full p-6 shadow-xl space-y-4">
@@ -387,7 +399,7 @@ export default function App() {
         </div>
       )}
 
-      {/* ─── MODAL DE REGISTRO DE DENÚNCIA ─── */}
+      {/* MODAL DE DENÚNCIA */}
       {modalDenunciaAberto && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-2xl max-w-md w-full p-6 shadow-xl space-y-4">
@@ -402,7 +414,7 @@ export default function App() {
               <div className="py-8 text-center space-y-2">
                 <CheckCircle className="h-12 w-12 text-emerald-500 mx-auto animate-bounce" />
                 <h4 className="font-bold text-gray-800">Relatório Enviado com Sucesso!</h4>
-                <p className="text-xs text-gray-500">A equipe de zeladoria de Parelhas/RN foi notificada por {nomeUsuario}.</p>
+                <p className="text-xs text-gray-500">A equipe de zeladoria foi notificada por {nomeUsuario} (Rua {nomeRua}).</p>
               </div>
             ) : (
               <form onSubmit={handleEnviarDenuncia} className="space-y-4">
@@ -426,7 +438,7 @@ export default function App() {
 
                 <div className="bg-gray-50 p-3 rounded-xl text-xs text-gray-500 flex items-center gap-2">
                   <MapPin className="h-4 w-4 text-emerald-600 flex-shrink-0" />
-                  <span>GPS: Rua Comendador José Gomes, Parelhas - RN</span>
+                  <span>GPS: Rua {nomeRua}, Parelhas - RN</span>
                 </div>
 
                 <div className="flex justify-end space-x-2 pt-2">
