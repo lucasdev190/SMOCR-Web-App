@@ -1,6 +1,6 @@
 # 🚚 SMOCR - Sistema de Monitoramento e Otimização da Coleta de Resíduos
 
-Plataforma web responsiva voltada à transformação digital da zeladoria urbana e monitoramento em tempo real da coleta de lixo na **Rua**, no município de **Parelhas - RN**. 
+Plataforma web responsiva voltada à transformação digital da zeladoria urbana e ao monitoramento em tempo real da coleta de lixo na **Rua Comendador José Gomes**, no município de **Parelhas - RN**. 
 
 Projeto desenvolvido como requisito prático para a disciplina de **Projeto Integrador de Tecnologia da Informação II** do curso de Tecnologia da Informação (UFMS Digital).
 
@@ -9,51 +9,74 @@ Projeto desenvolvido como requisito prático para a disciplina de **Projeto Inte
 ## 🛠️ Tecnologias Utilizadas
 
 - **React.js (v18+)**: Biblioteca para construção de interfaces orientadas a componentes.
-- **Tailwind CSS**: Framework CSS de estilização utilitária para layouts responsivos.
+- **Tailwind CSS**: Framework CSS de estilização utilitária via CDN.
 - **Lucide React**: Biblioteca de ícones vetoriais modernos.
-- **HTML5 & JavaScript (ES6+)**: Estrutura semântica e lógica dinâmica.
-- **Vite**: Ferramenta de build e servidor de desenvolvimento ágil.
+- **Vite**: Ferramenta de build e servidor de desenvolvimento local rápido.
 
 ---
 
 ## 🚀 Funcionalidades Principais
 
-- **Status da Coleta em Tempo Real**: Indicador visual da proximidade e estimativa de chegada do caminhão coletor.
-- **Alertas de Proximidade (Geofencing)**: Configuração de notificações sonoras antes que o veículo entre na via pública.
-- **Ouvidoria Visual Comunitária**: Módulo para envio de denúncias de focos de lixo ou entulho com marcação de GPS e captura de imagens.
-- **Design Responsivo**: Interface mobile-first otimizada para conexões 3G e exibição fluida em qualquer tamanho de tela.
+- **Status da Coleta em Tempo Real**: Indicador visual dinâmico com barra de progresso do deslocamento do caminhão coletor.
+- **Alertas de Proximidade**: Notificações sonoras configuráveis antes da chegada do veículo no trecho.
+- **Ouvidoria Visual Comunitária**: Módulo em popup para registro de denúncias ambientais com suporte a upload de fotos e marcação GPS.
+- **Design Responsivo**: Layout otimizado para celulares, tablets e desktops.
+
+---
+
+## 📁 Estrutura dos Arquivos no Repositório
+
+```text
+SMOCR-Web-App/
+├── index.html        # Página principal com carregamento do Tailwind CSS
+├── package.json      # Configuração de scripts e dependências do Node/Vite
+├── README.md         # Documentação completa do projeto
+└── src/
+    ├── App.jsx       # Componente React principal do Painel do Cidadão
+    └── main.jsx      # Ponto de entrada e renderização do React DOM
+
+```
 
 ---
 
 ## 🔧 Como Executar o Projeto Localmente
 
-1. Clone o repositório:
-   ```bash
-   git clone [https://github.com/lucasdev190/SMOCR-Web-App.git](https://github.com/lucasdev190/SMOCR-Web-App.git)
+### Pré-requisito:
+
+Possuir o **[Node.js](https://nodejs.org/)** instalado no computador.
+
+### Passo a Passo:
+
+1. **Clone o repositório:**
+```bash
+git clone [https://github.com/lucasdev190/SMOCR-Web-App.git](https://github.com/lucasdev190/SMOCR-Web-App.git)
 
 ```
 
-2. Acesse a pasta do projeto:
+
+2. **Acesse a pasta raiz do projeto:**
 ```bash
 cd SMOCR-Web-App
 
 ```
 
 
-3. Instale as dependências:
+3. **Instale as dependências necessárias:**
 ```bash
-npm install
+npm install react react-dom lucide-react vite @vitejs/plugin-react
 
 ```
 
 
-4. Inicie o servidor de desenvolvimento:
+4. **Inicie o servidor local de desenvolvimento:**
 ```bash
 npm run dev
 
 ```
 
 
+5. **Acesse no navegador:**
+Abra a URL exibida no terminal (geralmente `http://localhost:5173/`).
 
 ---
 
@@ -63,4 +86,7 @@ npm run dev
 
 Estudante de Tecnologia da Informação - UFMS Digital
 
+Repositório Oficial: [github.com/lucasdev190/SMOCR-Web-App](https://github.com/lucasdev190/SMOCR-Web-App.git)
+
 Local de Aplicação: Parelhas - RN
+
