@@ -19,7 +19,19 @@ Acesse a demonstração online e responsiva diretamente no seu navegador ou celu
 - **React.js (v18+)**: Biblioteca para construção de interfaces orientadas a componentes.
 - **Tailwind CSS**: Framework CSS de estilização utilitária via CDN.
 - **Lucide React**: Biblioteca de ícones vetoriais modernos.
+- **Banco de Dados (Módulo 3)**: SQL / PostgreSQL (DDL e DML normalizados).
 - **Vite**: Ferramenta de build e servidor de desenvolvimento local rápido.
+
+---
+
+## 🛢️ Estrutura do Banco de Dados (SQL)
+
+O projeto conta com um modelo relacional normalizado localizado na pasta `/database/schema.sql`:
+
+- **`usuarios`**: Cadastro dos moradores.
+- **`rotas_coleta`**: Ruas ativas e horários (Terças e Sextas às 07:00).
+- **`lixeiras_residenciais`**: Registro do nível de ocupação da lixeira (0% a 100%).
+- **`denuncias`**: Registro de ocorrências com geolocalização e status de resolução.
 
 ---
 
@@ -33,16 +45,18 @@ Acesse a demonstração online e responsiva diretamente no seu navegador ou celu
 
 ---
 
-## 📁 Estrutura dos Arquivos no Repositório
+## 📁 Estrutura do Repositório
 
 ```text
 SMOCR-Web-App/
-├── index.html        # Página principal com carregamento do Tailwind CSS
-├── package.json      # Configuração de scripts e dependências do Node/Vite
-├── README.md         # Documentação completa do projeto
+├── database/
+│   └── schema.sql    # Scripts DDL/DML de criação e carga do banco de dados
+├── index.html        # Página principal
+├── package.json      # Dependências e scripts do projeto
+├── README.md         # Documentação completa
 └── src/
-    ├── App.jsx       # Componente React principal do Painel do Cidadão
-    └── main.jsx      # Ponto de entrada e renderização do React DOM
+    ├── App.jsx       # Componente React principal
+    └── main.jsx      # Entrada e renderização do React
 
 ```
 
